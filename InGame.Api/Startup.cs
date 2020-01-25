@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using InGame.Api.Data;
 using InGame.Api.DataService;
 using Microsoft.AspNetCore.Builder;
@@ -31,8 +32,11 @@ namespace InGame.Api
             var connectionString = Configuration["connectionStrings:InGameDbConnectionString"];
             services.AddDbContext<InGameDataContext>(c => c.UseSqlServer(connectionString));
             services.AddScoped<IProductDataService, ProductDataService>();
+            services.AddScoped<ICategoryDataService, CategoryDataService>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

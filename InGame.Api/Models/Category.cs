@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 namespace InGame.Api.Models
 {
-    public class Category
+    public class Category : Base
     {
-        public int Id { get; set; }
-        public int ParentId { get; set; }
-        public int CategoryName { get; set; }
+        public int? ParentId { get; set; }
+        public string CategoryName { get; set; }
+
+        public Category Parent { get; set; }
+        public List<Category> SubCategories { get; set; }
+
     }
 }
