@@ -41,6 +41,18 @@ namespace InGame.Api.Controllers
             return Ok(categoryDtos);
         }
 
+        [Route("GetCategoriesWithoutHierarchy")]
+        public IActionResult GetCategoriesWithoutHierarchy()
+        {
+            var categories = _categoryDataService.GetCategories();
+            if (categories == null)
+                return NotFound("There is no categories");            
+            List<CategoryDto> categoryDtos = _mapper.Map<List<Category>, List<CategoryDto>>(categories);
+            return Ok(categoryDtos);
+        }
+
+
+
         public static List<Category> BuildTree(List<Category> source)
         {
             var groups = source.GroupBy(i => i.ParentId);
@@ -70,5 +82,6 @@ namespace InGame.Api.Controllers
                 node.SubCategories = new List<Category>();
             }
         }
+
     }
 }

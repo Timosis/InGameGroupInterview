@@ -1,8 +1,121 @@
-﻿
+﻿@using Syncfusion.EJ2
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<!--begin::Portlet-->
+<div class="kt-portlet">
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-label">
+            <span class="kt-portlet__head-icon">
+                <i class="fas fa-sitemap"></i>
+            </span>
+            <h3 class="kt-portlet__head-title kt-font-primary">
+                Categories
+            </h3>
+        </div>
+    </div>
+    <div class="kt-portlet__body">
+        <div class="control-section">
+            @{
+                var dict = new Dictionary<string, object>();
+                dict.Add("number", true);
+                dict.Add("min", 0);
+                var editparams = new { format = "n" };
+            }
+            <ejs-treegrid id="TreeGrid" dataSource="ViewBag.dataSource" height="400" childMapping="SubCategories" treeColumnIndex="1" allowPaging="true" actionComplete="actionComplete" toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" })">
+                <e-treegrid-editsettings allowAdding="true" allowEditing="true" mode="Dialog" allowDeleting="true" newRowPosition="Child" template="#dialogtemplate"></e-treegrid-editsettings>
 
+                <e-treegrid-columns>
+                    <e-treegrid-column field="Id" headerText="Category Id" isPrimaryKey="true" edit="editparams" validationRules="@(new { required=true, number=true})" textAlign="Right" width="120"></e-treegrid-column>
+                    <e-treegrid-column field="CategoryName" headerText="Category Name" validationRules="@(new { required=true})" editType="stringedit" width="225"></e-treegrid-column>
+                    <e-treegrid-column field="ParentId" headerText="Parent Id" validationRules="@(new { required=true})" editType="stringedit" width="225"></e-treegrid-column>
+
+                </e-treegrid-columns>
+            </ejs-treegrid>
+        </div>
+
+    </div>
+</div>
+
+<script id='dialogtemplate' type="text/x-template">
+    <div id="dialogTemp"></div>
+</script>
+
+<script>
+
+    function actionComplete(args) {
+        debugger;     
+        args.dialog.animationSettings = { effect: "Zoom", duration: 400 };
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+              let spinner = ej.popups.createSpinner({ target: args.dialog.element });
+              ej.popups.showSpinner(args.dialog.element);
+                if (args.requestType === 'beginEdit') {
+                    var ajax = new ej.base.Ajax({
+                        url: "@Url.Action("EditPartial", "Category")", //render the partial view
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ value: args.rowData })
+                    });
+                    ajax.send().then(function (data) {
+                        appendElement(data, args.form); //Render the edit form with selected record
+                        ej.popups.hideSpinner(args.dialog.element);
+                    }).catch(function (xhr) {
+                        console.log(xhr);
+                        ej.popups.hideSpinner(args.dialog.element);
+                    });
+                }
+                if (args.requestType === 'add') {
+                    var ajax = new ej.base.Ajax({
+                        url: "@Url.Action("AddPartial","Category")", //render the partial view
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ value: args.rowData })
+                    });
+                    ajax.send().then(function (data) {
+                        appendElement(data, args.form); //Render the edit form with selected record
+                        ej.popups.hideSpinner(args.dialog.element);
+                    }).catch(function (xhr) {
+                        console.log(xhr);
+                    });
+                }
+            }
+        }
+
+    function appendElement(elementString, form) {
+            form.querySelector("#dialogTemp").innerHTML = elementString;
+            var script = document.createElement('script');
+            script.type = "text/javascript";
+            var serverScript = form.querySelector("#dialogTemp").querySelector('script');
+            script.textContent = serverScript.innerHTML;
+            document.head.appendChild(script);
+            serverScript.remove();
+        }
+
+</script>
+
+<style>
+
+    :-ms-fullscreen, .e-dialog {
+        max-width: 215px;
+    }
+
+    @@media only screen and (max-width: 991px) {
+        .e-dialog.e-control.e-popup {
+            min-width: 300px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 992px) {
+        .e-dialog.e-control.e-popup {
+            min-width: 450px !important;
+            min-height: 215px;
+        }
+
+        .e-bigger .e-dialog.e-control.e-popup,
+        .e-bigger .e-dialog.e-control.e-popup {
+            min-height: 496px;
+        }
+    }
+</style>
