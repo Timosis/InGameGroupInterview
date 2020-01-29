@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InGame.Api.Models
+namespace InGame.WebApi.Models
 {
     public class Base
     {

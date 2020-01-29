@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InGame.Dtos;
 using InGame.WebUi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.EJ2.Base;
 
 namespace InGame.WebUi.Controllers
 {
@@ -28,10 +30,15 @@ namespace InGame.WebUi.Controllers
             return PartialView("EditPartial");
         }
 
-        public async Task<ActionResult> AddPartial()
+        public JsonResult FillDropDownWithCategories()
         {
-            ViewBag.DropDownDataSource = await _categoryApiService.GetCategoriesWithoutHierarchy();
+            var categories = _categoryApiService.GetCategoriesWithoutHierarchy();
 
+            return Json(categories);
+        }
+
+        public ActionResult AddPartial()
+        {
             return PartialView("~/Views/Category/AddPartial.cshtml");
         }
     }

@@ -1,4 +1,4 @@
-﻿using InGame.Api.Models;
+﻿using InGame.WebApi.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InGame.Api.Data
+namespace InGame.WebApi.Data
 {
     public class InGameDataContext : IdentityDbContext
     {

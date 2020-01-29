@@ -9,6 +9,7 @@ namespace InGame.Dtos
         public int Id { get; set; }
         public int? ParentId { get; set; }
         public string CategoryName { get; set; }
+        public bool HasChild { get; set; }
         public List<CategoryDto> SubCategories { get; set; }
     }
 }

@@ -1,0 +1,114 @@
+﻿@model InGame.Dtos.ProductDto
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- begin:: Subheader -->
+<div class="kt-subheader   kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">
+                Products
+            </h3>
+        </div>
+        <div class="kt-subheader__toolbar">
+            <div class="kt-subheader__wrapper">
+                <ejs-button id="addProduct" cssClass="btn btn-brand" content="Add Product"></ejs-button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 control-section" id="target">
+
+    <ejs-dialog id="dialog" width="400px"
+                showCloseIcon="true" header="User Details">
+        <e-dialog-animationsettings effect="Zoom"></e-dialog-animationsettings>
+        <e-content-template>
+            <form>
+                <div class='form-group'>
+                    <ejs-dropdownlist id="categoryDropdown" ejs-for="@Model.CategoryId" open="open" placeholder="Select Category" noRecordsTemplate="<div id='tree'></div>">
+                    </ejs-dropdownlist>
+                </div>
+                <div class='form-group'>
+                    <ejs-textbox id="productName" ejs-for="@Model.Name" placeholder="Product Name" floatLabelType="Auto"></ejs-textbox>
+                </div>
+                <div class='form-group'>
+                    <ejs-textbox id="description" ejs-for="@Model.Description" placeholder="Description" floatLabelType="Auto"></ejs-textbox>
+                </div>
+                <div class='form-group'>
+                    <ejs-numerictextbox id="currency" ejs-for="@Model.Price" format="c2" value="20" Type="text"></ejs-numerictextbox>
+                </div>
+            </form>
+        </e-content-template>
+    </ejs-dialog>
+</div>
+
+<script>
+    var isDropDownFilled = false;
+    function open() {
+        if (!isDropDownFilled) {
+            isDropDownFilled = true;
+            $.ajax({
+            type: "GET",
+            url: "@Url.Action("FillDropDownWithCategories", "Category")", // <-- Where should this point?
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+             var treeObj;
+             var dropdownObj = document.getElementById("categoryDropdown").ej2_instances[0];
+             dropdownObj.popupObj.element.firstElementChild.className = "e-content overflow";
+               // rendering the treeview only on first time
+              if (treeObj == null || treeObj == undefined) {
+                    debugger;
+                  treeObj = new ej.navigations.TreeView({
+                      fields: {
+                          dataSource: response.result,
+                          id: 'id',
+                          parentID: 'parentId',
+                          text: 'categoryName',
+                          hasChildren: 'hasChild'
+                      },
+                      // use the nodeselected event to add the text to dropdown's input element.
+                      nodeSelected: function (args) {
+                          var drop = document.getElementById("categoryDropdown").ej2_instances[0];
+                          drop.inputElement.value = args.nodeData.text;
+                      }
+                  });
+                  debugger;
+                  treeObj.appendTo('#tree');
+              }
+            }
+           });
+        }
+    }
+
+    document.getElementById('addProduct').onclick = function () {
+        var dialogObj = document.getElementById('dialog').ej2_instances[0];
+        dialogObj.show();
+    };
+</script>
+<style>
+
+    .overflow {
+        overflow: auto;
+    }
+
+
+    .control-section {
+        padding-left: 10px;
+    }
+
+    #target {
+        height: 100%;
+        min-height: 350px;
+    }
+
+    #modal_dialog {
+        margin: 20px;
+    }
+
+    .row {
+        padding: 10px 3px;
+    }
+</style>
+

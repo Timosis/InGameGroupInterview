@@ -1,12 +1,13 @@
-﻿using InGame.Api.Data;
-using InGame.Api.Models;
+﻿using InGame.WebApi.Data;
+using InGame.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InGame.Api.DataService
+namespace InGame.WebApi.DataService
 {
+
     public interface ICategoryDataService
     {
         List<Category> GetCategories();
@@ -19,6 +20,8 @@ namespace InGame.Api.DataService
         bool DeleteCategory(Category category);
         bool Save();
     }
+
+
 
     public class CategoryDataService : ICategoryDataService
     {
@@ -53,7 +56,7 @@ namespace InGame.Api.DataService
         {
             throw new NotImplementedException();
         }
- 
+
         public bool IsDuplicateCategoryName(int countryId, string countryName)
         {
             throw new NotImplementedException();
@@ -68,6 +71,5 @@ namespace InGame.Api.DataService
         {
             throw new NotImplementedException();
         }
-
     }
 }

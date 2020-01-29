@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using InGame.Dtos;
+using InGame.WebApi.DataService;
+using InGame.WebApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using InGame.Api.DataService;
-using InGame.Api.Models;
-using InGame.Dtos;
-using Microsoft.AspNetCore.Mvc;
 
-namespace InGame.Api.Controllers
+namespace InGame.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -46,12 +46,10 @@ namespace InGame.Api.Controllers
         {
             var categories = _categoryDataService.GetCategories();
             if (categories == null)
-                return NotFound("There is no categories");            
+                return NotFound("There is no categories");
             List<CategoryDto> categoryDtos = _mapper.Map<List<Category>, List<CategoryDto>>(categories);
             return Ok(categoryDtos);
         }
-
-
 
         public static List<Category> BuildTree(List<Category> source)
         {
@@ -82,6 +80,5 @@ namespace InGame.Api.Controllers
                 node.SubCategories = new List<Category>();
             }
         }
-
     }
 }

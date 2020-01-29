@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InGame.Api.Models
+namespace InGame.WebApi.Models
 {
     public class Category : Base
     {
@@ -12,6 +12,5 @@ namespace InGame.Api.Models
 
         public Category Parent { get; set; }
         public List<Category> SubCategories { get; set; }
-
     }
 }

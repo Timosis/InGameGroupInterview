@@ -3,21 +3,19 @@
 
 @using Syncfusion.EJ2
 
-    <div>
+    <div>  
         <div class="form-row">
             <div class="form-group col-md-12">
-                <ejs-dropdownlist id="Categories" dataSource="@ViewBag.DropDownDataSource" placeholder="Select Category" floatLabelType="Always">
-                    <e-dropdownlist-fields text="CategoryName" value="Id"></e-dropdownlist-fields>
-                </ejs-dropdownlist>                
+                <ejs-dropdownlist id="categoryDropdown" open="open" placeholder="Select Category" noRecordsTemplate="<div id='tree'></div>">                    
+                </ejs-dropdownlist>            
             </div>
         </div>
-
+        
         <div class="form-row">
             <div class="form-group col-md-12">
                 <ejs-textbox id="CategoryName" placeholder="Category Name" floatLabelType="Auto"></ejs-textbox>
             </div>
         </div>
-
     </div>
 
 <ejs-scripts></ejs-scripts>

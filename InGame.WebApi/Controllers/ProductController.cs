@@ -1,13 +1,13 @@
-﻿using System;
+﻿using InGame.Dtos;
+using InGame.WebApi.DataService;
+using InGame.WebApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InGame.Api.DataService;
-using InGame.Api.Models;
-using InGame.Dtos;
-using Microsoft.AspNetCore.Mvc;
 
-namespace InGame.Api.Controllers
+namespace InGame.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -48,7 +48,7 @@ namespace InGame.Api.Controllers
 
             return CreatedAtRoute("GetProduct", new { productId = productToCreate.Id }, productToCreate);
         }
-        
+
         [Route("GetProduct")]
         public IActionResult GetProduct(int productId)
         {
@@ -61,12 +61,13 @@ namespace InGame.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+
             var productDto = new ProductDto
             {
                 Id = product.Id,
                 CategoryId = product.CategoryId,
                 Name = product.Name,
-                ImageUrl = product.ImageUrl,
+                Image = product.Image,
                 Price = product.Price,
                 Description = product.Description,
             };
@@ -74,7 +75,9 @@ namespace InGame.Api.Controllers
             return Ok(productDto);
         }
 
-        [Route("GetProduct")]
+
+
+        [Route("GetProductsByCategory")]
         public IActionResult GetProductsByCategory(int categoryId)
         {
             if (!(categoryId > 0))
@@ -110,7 +113,7 @@ namespace InGame.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if(!_productDataService.UpdateProduct(updatedProduct))
+            if (!_productDataService.UpdateProduct(updatedProduct))
             {
                 ModelState.AddModelError("", $"Something went wrong updating {updatedProduct.Name}");
                 return StatusCode(500, ModelState);
@@ -139,7 +142,7 @@ namespace InGame.Api.Controllers
 
             ModelState.AddModelError("", $"{product.Name} is deleted");
 
-            return StatusCode(500,ModelState);
+            return StatusCode(500, ModelState);
         }
 
         [Route("GetProducts")]

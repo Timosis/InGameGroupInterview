@@ -1,4 +1,5 @@
-﻿@using Syncfusion.EJ2
+﻿
+@using Syncfusion.EJ2
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,20 +25,22 @@
                 dict.Add("min", 0);
                 var editparams = new { format = "n" };
             }
-            <ejs-treegrid id="TreeGrid" dataSource="ViewBag.dataSource" height="400" childMapping="SubCategories" treeColumnIndex="1" allowPaging="true" actionComplete="actionComplete" toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" })">
+            <ejs-treegrid id="TreeGrid" dataSource="ViewBag.dataSource" height="400" childMapping="SubCategories" 
+                          treeColumnIndex="1" allowPaging="true" actionBegin="actionBegin" actionComplete="actionComplete" toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" })">
                 <e-treegrid-editsettings allowAdding="true" allowEditing="true" mode="Dialog" allowDeleting="true" newRowPosition="Child" template="#dialogtemplate"></e-treegrid-editsettings>
-
                 <e-treegrid-columns>
                     <e-treegrid-column field="Id" headerText="Category Id" isPrimaryKey="true" edit="editparams" validationRules="@(new { required=true, number=true})" textAlign="Right" width="120"></e-treegrid-column>
                     <e-treegrid-column field="CategoryName" headerText="Category Name" validationRules="@(new { required=true})" editType="stringedit" width="225"></e-treegrid-column>
                     <e-treegrid-column field="ParentId" headerText="Parent Id" validationRules="@(new { required=true})" editType="stringedit" width="225"></e-treegrid-column>
-
                 </e-treegrid-columns>
             </ejs-treegrid>
         </div>
-
     </div>
 </div>
+
+<div class="row">
+</div>
+
 
 <script id='dialogtemplate' type="text/x-template">
     <div id="dialogTemp"></div>
@@ -45,10 +48,49 @@
 
 <script>
 
+    var isDropDownFilled = false;
+
+    function open() {
+        if (!isDropDownFilled) {
+            isDropDownFilled = true;
+            $.ajax({
+            type: "GET",
+            url: "@Url.Action("FillDropDownWithCategories", "Category")", // <-- Where should this point?
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+             var treeObj;
+             var dropdownObj = document.getElementById("categoryDropdown").ej2_instances[0];
+             dropdownObj.popupObj.element.firstElementChild.className = "e-content overflow";
+               // rendering the treeview only on first time
+              if (treeObj == null || treeObj == undefined) {
+                    debugger;
+                  treeObj = new ej.navigations.TreeView({
+                      fields: {
+                          dataSource: response.result,
+                          id: 'id',
+                          parentID: 'parentId',
+                          text: 'categoryName',
+                          hasChildren: 'hasChild'
+                      },
+                      // use the nodeselected event to add the text to dropdown's input element.
+                      nodeSelected: function (args) {
+                          var drop = document.getElementById("categoryDropdown").ej2_instances[0];
+                          drop.inputElement.value = args.nodeData.text;
+                      }
+                  });
+                  debugger;
+                  treeObj.appendTo('#tree');
+              }
+            }
+           });
+        }
+    }
+
     function actionComplete(args) {
-        debugger;     
         args.dialog.animationSettings = { effect: "Zoom", duration: 400 };
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+            args.dialog.header = args.requestType === 'beginEdit' ? 'Record of ' + args.rowData['CustomerID'] : 'New Category'
               let spinner = ej.popups.createSpinner({ target: args.dialog.element });
               ej.popups.showSpinner(args.dialog.element);
                 if (args.requestType === 'beginEdit') {
@@ -62,7 +104,6 @@
                         appendElement(data, args.form); //Render the edit form with selected record
                         ej.popups.hideSpinner(args.dialog.element);
                     }).catch(function (xhr) {
-                        console.log(xhr);
                         ej.popups.hideSpinner(args.dialog.element);
                     });
                 }
@@ -76,12 +117,25 @@
                     ajax.send().then(function (data) {
                         appendElement(data, args.form); //Render the edit form with selected record
                         ej.popups.hideSpinner(args.dialog.element);
-                    }).catch(function (xhr) {
-                        console.log(xhr);
                     });
                 }
             }
         }
+
+    function actionBegin(args) {   
+
+        debugger;
+        if (args.requestType == "cancel")  
+            isDropDownFilled = false;
+        var data =  $("#categoryDropdown").val();
+        if (args.requestType == "save") {
+            debugger;
+            console.log("save clicked");
+            var data =  $("#categoryDropdown").val();
+           
+        }
+
+    } 
 
     function appendElement(elementString, form) {
             form.querySelector("#dialogTemp").innerHTML = elementString;
@@ -91,11 +145,14 @@
             script.textContent = serverScript.innerHTML;
             document.head.appendChild(script);
             serverScript.remove();
-        }
+    }
 
 </script>
 
 <style>
+    .overflow {
+        overflow: auto;
+    }
 
     :-ms-fullscreen, .e-dialog {
         max-width: 215px;

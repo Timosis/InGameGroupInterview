@@ -13,10 +13,6 @@
    <ItemGroup>
      <ProjectReference Include="..\InGame.Dtos\InGame.Dtos.csproj" />
    </ItemGroup>
-  
-   <ItemGroup>
-     <Folder Include="Components\" />
-   </ItemGroup>
 
 
 </Project>

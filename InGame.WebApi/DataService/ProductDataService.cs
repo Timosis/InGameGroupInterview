@@ -1,11 +1,11 @@
-﻿using InGame.Api.Data;
-using InGame.Api.Models;
+﻿using InGame.WebApi.Data;
+using InGame.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InGame.Api.DataService
+namespace InGame.WebApi.DataService
 {
     public interface IProductDataService
     {
@@ -61,7 +61,7 @@ namespace InGame.Api.DataService
             var result = _context.Products.ToList();
             return result;
         }
-       
+
         public bool UpdateProduct(Product product)
         {
             _context.Update(product);

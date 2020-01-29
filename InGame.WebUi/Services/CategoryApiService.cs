@@ -20,7 +20,7 @@ namespace InGame.WebUi.Services
 
         public CategoryApiService(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri("https://localhost:44310/api/Category/");
+            httpClient.BaseAddress = new Uri("https://localhost:44386/api/Category/");
             httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
             httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
             this.httpClient = httpClient;
@@ -65,7 +65,5 @@ namespace InGame.WebUi.Services
                 throw ex;
             }
         }
-
-
     }
 }
