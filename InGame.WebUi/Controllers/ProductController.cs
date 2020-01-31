@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InGame.Dtos;
 using InGame.WebUi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InGame.WebUi.Controllers
@@ -12,10 +13,19 @@ namespace InGame.WebUi.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.saveButton = new
+            {
+                content = "Save",
+                isPrimary = true
+            };
+            ViewBag.cancelButton = new
+            {
+                content = "Cancel",
+            };
             return View();
         }
 
-        public IActionResult CreateProduct(ProductVm productVm)
+        public IActionResult Create(ProductVm productVm, IFormFile UploadFiles)        
         {
             return View();
         }
